@@ -18,7 +18,7 @@
 *******************************************************************************/
 
 * Personal SEP outcomes directly due to COVID
-* 1=You or your family member lost job and/or You or your family member had reduced capacity to earn, 0=no to both these
+* 1=You lost job and/or had reduced capacity to earn, 0=no to both these
 
 tab1 covid_dx2*		
 	
@@ -29,7 +29,7 @@ egen	COVIDper2 = rowmax(covid_dx2___6 covid_dx2___7)
 ta		COVIDper2
 	
 * Financial situation	
-* Depending on the distribution, could dichotomise as 1/2=0 and 3/5=1
+* After reviewing the distribution and considering response options, dichotomised as 1/2=0 and 3/5=1
 	
 tab covid_financ1		
 tab covid_financ1, nol		
@@ -53,10 +53,13 @@ egen	findif2 = rowmax(covid_financ2___1 covid_financ2___2 covid_financ2___3 covi
 ta		findif2
 		
 * Composite
-* 2 or more difficulties
+* any and 2 or more difficulties
+
+egen 	COVIDany = rowtotal(COVIDper2 covid_financ12 findif2)
+recode 	COVIDany 0=0 1/3=1
+ta 		COVIDany
 
 egen 	COVIDcomp = rowtotal(COVIDper2 covid_financ12 findif2)
 recode 	COVIDcomp 0/1=0 2/3=1
 ta 		COVIDcomp
-
-		
+	
